@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add a contact</title>
+</head>
+<body>
+<form method="post" th:action="@{/contact}">
+    <input type="email" id="email" name="email"  placeholder="Email" required>
+    <button class="text-light bg-primary rounded px-4" type="submit">Add a contact</button>
+</form>
+<div th:if="(${addContact != null && addContact != ''})" class="alert alert-danger">
+    <p th:text="${addContact}">Error Message</p>
+</div>
+</body>
+</html>

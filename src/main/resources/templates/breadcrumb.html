@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title 1</title>
+</head>
+<body>
+<header th:fragment="breadcrumb">
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li th:text="${breadcrumb}" class="breadcrumb-item active" aria-current="page"></li>
+        </ol>
+    </nav>
+
+</header>
+</body>
+</html>

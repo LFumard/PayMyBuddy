@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <div th:replace="head :: head"></div>
+    <title>Home</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+</head>
+<body>
+
+<div th:replace="header :: header"></div>
+<div th:insert="~{navbar :: nav}"></div>
+<!--<div th:replace="breadcrumb :: breadcrumb"></div>-->
+<div class="bg-secondary bg-opacity-25 p-2 pl-3">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb" style="margin: 0;">
+            <li class="breadcrumb-item" aria-current="page">Home</li>
+        </ol>
+    </nav>
+</div>
+
+<div style="height:30px;"></div>
+<div class="offset-md-3"></div>
+<div class="container">
+    <div class="container ">
+        <h3 style="float:left ">My informations</h3>
+    </div>
+</div>
+
+<p><br></p>
+<div class="container ">
+    <table class="table table-striped justify-content-center ">
+        <thead style="background-color : green;">
+        <tr style="color : white;">
+
+            <th scope="col">First Name</th>
+            <th scope="col">Last Name</th>
+            <th scope="col">EMail</th>
+            <th scope="col">CREDIT</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+
+            <td th:text="${user.prenom}"></td>
+            <td th:text="${user.nom}"></td>
+            <td th:text="${user.email}"></td>
+            <td th:text="${user.solde}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div class="container">
+    <h3>My Account</h3>
+    <div class="border border-dark border-3">
+        <table class="table text-center table-borderless align-middle m-0">
+            <thead class="bg-success text-light">
+            <tr>
+                <th>Receiver</th>
+                <th>Emetter</th>
+                <th>Description</th>
+                <th>Amount</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="transaction: ${transactions}" class="text-center ">
+                <td th:text="${transaction.userReceiver.firstName}"/>
+                <td th:text="${transaction.userSender.firstName}"/>
+                <td th:text="${transaction.description}"/>
+                <td th:text="${transaction.amount}"/>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<nav aria-label="Pagination" th:if="${transactions.totalPages >= 1}">
+    <ul class="pagination justify-content-center font-weight-medium">
+        <li class="page-item" th:classappend="${transactions.number == 0} ? 'disabled'">
+            <a class="page-link svg-icon"
+               th:href="@{/transfer?page={id}(id=${transactions.number})}"
+               aria-label="Previous"
+               title="Previous Page" rel="tooltip">
+                <span aria-hidden="true">&lt;</span>
+            </a>
+        </li>
+        <li class="page-item"
+            th:classappend="${selectedPage == transactions.number + 1} ? 'active'"
+            th:each="selectedPage : ${#numbers.sequence( 1, transactions.totalPages, 1)}">
+            <a class="page-link" th:href="@{/transfer?page={id}(id=${selectedPage})}" th:text="${selectedPage}"
+               th:title="${'Page '+ selectedPage}"
+               rel="tooltip"></a>
+        </li>
+        <li class="page-item"
+            th:classappend="${transactions.number + 1 >= transactions.totalPages} ? 'disabled'">
+            <a class="page-link svg-icon" th:href="@{/transfer?page={id}(id=${transactions.number + 2})}"
+               aria-label="Next"
+               title="Next Page" rel="tooltip">
+                <span aria-hidden="true">&gt;</span>
+            </a>
+        </li>
+    </ul>
+</nav>
+</body>
+</html>
