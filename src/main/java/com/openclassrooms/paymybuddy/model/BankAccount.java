@@ -4,7 +4,6 @@ package com.openclassrooms.paymybuddy.model;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.util.Optional;
 
 @Entity
 public class BankAccount {

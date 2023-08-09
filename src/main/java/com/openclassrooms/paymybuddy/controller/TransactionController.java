@@ -1,10 +1,10 @@
 package com.openclassrooms.paymybuddy.controller;
 
+import com.openclassrooms.paymybuddy.utils.Constante;
 import com.openclassrooms.paymybuddy.Dto.TransactionDTO;
 import com.openclassrooms.paymybuddy.model.User;
 import com.openclassrooms.paymybuddy.service.TransactionService;
 import com.openclassrooms.paymybuddy.service.UserService;
-import com.openclassrooms.paymybuddy.utils.Constante;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;

@@ -1,12 +1,11 @@
 package com.openclassrooms.paymybuddy.service;
 
-import com.openclassrooms.paymybuddy.Dto.TransactionDTO;
 import com.openclassrooms.paymybuddy.model.Transaction;
 import com.openclassrooms.paymybuddy.model.User;
 import com.openclassrooms.paymybuddy.repository.TransactionRepository;
 import com.openclassrooms.paymybuddy.utils.Constante;
+import com.openclassrooms.paymybuddy.Dto.TransactionDTO;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

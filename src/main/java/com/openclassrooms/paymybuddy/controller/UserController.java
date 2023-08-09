@@ -1,15 +1,14 @@
 package com.openclassrooms.paymybuddy.controller;
 
 import com.openclassrooms.paymybuddy.model.BankAccount;
-import com.openclassrooms.paymybuddy.model.User;
 import com.openclassrooms.paymybuddy.repository.UserRepository;
 import com.openclassrooms.paymybuddy.service.BankAccountService;
+import com.openclassrooms.paymybuddy.utils.Constante;
+import com.openclassrooms.paymybuddy.model.User;
 import com.openclassrooms.paymybuddy.service.TransactionService;
 import com.openclassrooms.paymybuddy.service.UserService;
-import com.openclassrooms.paymybuddy.utils.Constante;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;

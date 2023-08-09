@@ -2,15 +2,11 @@ package com.openclassrooms.paymybuddy;
 
 import com.openclassrooms.paymybuddy.model.User;
 import com.openclassrooms.paymybuddy.repository.UserRepository;
-import com.openclassrooms.paymybuddy.service.UserService;
 import com.openclassrooms.paymybuddy.service.UserServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.stubbing.OngoingStubbing;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -21,7 +17,6 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
@@ -59,16 +54,6 @@ class UserServiceTest {
         List<User> listFriend = actualUser.getFriends();
         listFriend.add(myFriend);
         this.actualUser = actualUser;
-
-        /*
-        List<User> listFriend = user.get().getFriends();
-            if (!listFriend.contains(friend.get())) {
-                listFriend.add(friend.get());
-                user.get().setFriends(listFriend);
-                this.updateUser(user.get().getEmail(), user.get());
-         */
-
-
     }
     @Test
     public void addContactTest() {
@@ -87,11 +72,6 @@ class UserServiceTest {
         when(userRepository.save(actualUser)).thenReturn(actualUser);
 
         String result = userService.addContact(friendUserToAdd.getEmail(), actualUser.getId());
-/*
-        System.out.println("NEW FRIENDS ID : " + actualUser.getFriends().get(0).getId());
-        System.out.println("NEW FRIENDS TOSTRING: " + actualUser.getFriends().get(0).toString());
-        System.out.println("EXPECTED FRIENDS TOSTRING: " + friendUserToAdd.toString());
-*/
 
         assertThat(result).isEmpty();
         assertThat(actualUser.getFriends().stream().count()).isEqualTo(2);

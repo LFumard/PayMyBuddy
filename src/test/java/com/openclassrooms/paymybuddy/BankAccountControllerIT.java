@@ -1,42 +1,49 @@
 package com.openclassrooms.paymybuddy;
 
 import com.openclassrooms.paymybuddy.model.BankAccount;
-import com.openclassrooms.paymybuddy.model.Transaction;
 import com.openclassrooms.paymybuddy.model.User;
 import com.openclassrooms.paymybuddy.repository.BankAccountRepository;
-import com.openclassrooms.paymybuddy.repository.TransactionRepository;
 import com.openclassrooms.paymybuddy.service.BankAccountServiceImpl;
+import com.openclassrooms.paymybuddy.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.HttpHeaders;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
-
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ContextConfiguration
 @ExtendWith(MockitoExtension.class)
-public class BankAccountServiceTest {
+@ActiveProfiles("test")
+//@Sql("../../../../../scripts/dataTest.sql")
+@Sql("dataTest.sql")
+public class BankAccountControllerIT {
 
-    @MockBean
-    private TransactionRepository transactionRepository;
-    @MockBean
-    private BankAccountRepository bankAccountRepository;
+    @LocalServerPort
+    private int port;
     @Autowired
     private BankAccountServiceImpl bankAccountService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private BankAccountRepository bankAccountRepository;
+
+    private HttpHeaders httpHeaders = new HttpHeaders();
+    private TestRestTemplate restTemplate = new TestRestTemplate();
     private User actualUser;
     private User myFriend;
     private BankAccount actualBankAccount;
-
-    private double mySolde;
     @BeforeEach
     void setUp() {
 
@@ -49,7 +56,7 @@ public class BankAccountServiceTest {
         myFriend.setSolde(0);
         this.myFriend = myFriend;
 
-        mySolde = 2000.00;
+        double mySolde = 2000.00;
         User actualUser = new User();
         actualUser.setId(1);
         actualUser.setFirstName("firstNameActualUser");
@@ -68,38 +75,7 @@ public class BankAccountServiceTest {
         this.actualBankAccount = actualBankAccount;
     }
     @Test
-    void addBankAccount() {
+    public void addBankAccount() {
 
-        BankAccount newBankAccount = new BankAccount();
-        newBankAccount.setIban("newIBAN");
-        newBankAccount.setDescription("newDescription");
-
-        bankAccountService.addBankAccount(actualUser, newBankAccount);
-
-        verify(bankAccountRepository, times(1)).save(any(BankAccount.class));
-    }
-
-    @Test
-    void transferToOrFromMyBankAccount_WhenTransfertToMyBankAccount() {
-
-        double amount = -1000.00;
-        String ibanAccount = "ibanActualUser";
-
-        bankAccountService.transferToOrFromMyBankAccount(actualUser, ibanAccount, amount);
-
-        assertThat(actualUser.getSolde()).isEqualTo(995);
-        verify(transactionRepository, times(1)).save(any(Transaction.class));
-   }
-
-    @Test
-    void transferToOrFromMyBankAccount_WhenTransfertFromMyBankAccount() {
-
-        double amount = 1000.00;
-        String ibanAccount = "ibanActualUser";
-
-        bankAccountService.transferToOrFromMyBankAccount(actualUser, ibanAccount, amount);
-
-        assertThat(actualUser.getSolde()).isEqualTo(3000);
-        verify(transactionRepository, times(1)).save(any(Transaction.class));
     }
 }

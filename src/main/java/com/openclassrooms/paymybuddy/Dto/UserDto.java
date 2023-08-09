@@ -13,7 +13,7 @@ public class UserDto {
     private String email;
     private double solde;
 
-    public static UserDto fromEntity(User user) {
+    public static UserDto fromEntityUser(User user) {
 
         UserDto userDto = new UserDto();
         userDto.email = user.getEmail();
