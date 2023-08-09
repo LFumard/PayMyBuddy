@@ -14,6 +14,7 @@ import org.mockito.stubbing.OngoingStubbing;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ContextConfiguration;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,8 +25,9 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
+@ContextConfiguration
 @ExtendWith(MockitoExtension.class)
-public class UserServiceTest {
+class UserServiceTest {
 
     @MockBean
     private UserRepository userRepository;
@@ -137,10 +139,40 @@ public class UserServiceTest {
         when(userRepository.findByEmail(actualUser.getEmail())).thenReturn(Optional.ofNullable(actualUser));
         when(userRepository.save(actualUser)).thenReturn(actualUser);
 
-        String result = userService.addContact(friendUserToAdd.getEmail(), actualUser.getId());
+        //String result = userService.addContact(friendUserToAdd.getEmail(), actualUser.getId());
+        String result = userService.addContact(myFriend.getEmail(), actualUser.getId());
 
         assertThat(result).isEqualTo("This contact is already in you're friend's list");
         assertThat(actualUser.getFriends().stream().count()).isEqualTo(1);
         verify(userRepository, times(0)).save(actualUser);
+    }
+
+    @Test
+    public void updateProfilUser() {
+
+        actualUser.setFirstName("NEWfirstNameActualUser");
+        actualUser.setLastName("NEWlastNameActualUser");
+
+        when(userRepository.findByEmail(actualUser.getEmail())).thenReturn(Optional.ofNullable(actualUser));
+        when(userRepository.save(actualUser)).thenReturn(actualUser);
+
+        userService.updateProfilUser(actualUser.getEmail(), actualUser);
+
+        verify(userRepository, times(1)).save(actualUser);
+    }
+
+    @Test
+    public void updateUser() {
+
+        actualUser.setFirstName("NEWfirstNameActualUser");
+        actualUser.setLastName("NEWlastNameActualUser");
+        actualUser.setSolde(1000.00);
+
+        when(userRepository.findByEmail(actualUser.getEmail())).thenReturn(Optional.ofNullable(actualUser));
+        when(userRepository.save(actualUser)).thenReturn(actualUser);
+
+        userService.updateUser(actualUser.getEmail(), actualUser);
+
+        verify(userRepository, times(1)).save(actualUser);
     }
 }

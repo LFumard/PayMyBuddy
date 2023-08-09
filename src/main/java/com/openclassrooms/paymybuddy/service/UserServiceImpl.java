@@ -47,11 +47,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return userRepository.findUserByEmail(email);
     }
 
-/*    @Override
-    public Optional<User> findAllFriendsByUserName(String username) {
-        return userRepository.findByEmail(username);
-    }*/
-
     @Override
     public Optional<User> findById(final int id) {
         return userRepository.findById(id);
@@ -63,11 +58,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return userRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException(username));
     }
 
-
- /*   @Override
-    public Page<User> findAllFriendsByIdPage(int idUserLog, Pageable pageableParam) {
-        return userRepository.findFriendsPage(idUserLog, pageableParam);
-    }*/
 
     @Override
     public String addContact(String email, int idUser) {
@@ -100,21 +90,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return userRepository.save(userLocal);
     }
 
-   /* @Override
-    public void delete(final int id) {
-        Optional<User> optionalUserLocal = this.findById(id);
-        optionalUserLocal.ifPresent(userRepository::delete);
-    }*/
 
     @Override
     public List<User> findAllFriendsById(int id) {
         return userRepository.findFriends(id);
     }
 
-   /* @Override
-    public Page<User> findAllFriendsById(int id, Pageable pageable) {
-        return userRepository.findFriendsPage(id, pageable);
-    }*/
+
 
     @Override
     public void updateProfilUser(String nameUser, User user) {

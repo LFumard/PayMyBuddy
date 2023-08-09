@@ -51,7 +51,7 @@ public class BankAccountServiceImpl implements BankAccountService {
         }
         else {
             transaction.setDescription(("Transfer to my IBAN Account " + strIBANAccount));
-            accountBalance = amount * (1 + Constante.COMMISSION);
+            accountBalance = Math.round(amount * (1 + Constante.COMMISSION) * 100.00) / 100.00;
         }
         transaction.setAmount(amount);
         transactionRepository.save(transaction);

@@ -186,4 +186,12 @@ public class User implements UserDetails {
 				", transactionsReceiver=" + transactionsReceiver +
 				'}';
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if(this.getClass().equals(obj.getClass())) {
+			return this.toString().equals(obj.toString());
+		}
+		return false;
+	}
 }
