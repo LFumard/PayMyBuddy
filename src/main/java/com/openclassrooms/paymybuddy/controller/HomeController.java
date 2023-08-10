@@ -18,9 +18,7 @@ import java.util.Optional;
 @Controller
 public class HomeController {
 
-    //@Autowired
     private UserService userService;
-   // @Autowired
     private final TransactionService transactionService;
 
     public HomeController(UserService userService, TransactionService transactionService) {
@@ -31,8 +29,7 @@ public class HomeController {
     @GetMapping("/homepage")
     public ModelAndView getUtilisateur(Authentication auth,
                                        @RequestParam(name = "page", defaultValue = "1") int page,
-                                       @RequestParam(name = "size", defaultValue = "10") int size)
-        /*ModelAndView modelAndView)*/ {
+                                       @RequestParam(name = "size", defaultValue = "10") int size) {
 
         Optional<User> user = Optional.of(new User());
         user = Optional.ofNullable(userService.findUserByEmail(auth.getName()));
@@ -45,8 +42,6 @@ public class HomeController {
         modelAndView.addObject("transactions", transactionService.findAllByEmitterAndReceiverId(user.get().getId(), PageRequest.of(page - 1, size)));
         modelAndView.addObject("user", user.map(UserDto::fromEntityUser).orElse(null));
         modelAndView.addObject("breadcrumb", "");
-
-        //user = Optional.ofNullable(userService.findUserByEmail(auth.getName()));
 
         return modelAndView;
     }
