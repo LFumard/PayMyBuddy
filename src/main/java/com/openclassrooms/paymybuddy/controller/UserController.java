@@ -74,7 +74,8 @@ public class UserController {
     }
 
     @PostMapping("/save")
-    public ModelAndView UpdateUser(@ModelAttribute User localUser, @NotNull Authentication auth, final ModelAndView modelAndView) {
+    //public ModelAndView UpdateUser(@ModelAttribute User localUser, @NotNull Authentication auth, final ModelAndView modelAndView) {
+    public ModelAndView UpdateUser(@ModelAttribute User localUser, @NotNull Authentication auth) {
 
         Optional<User> user = Optional.ofNullable(userService.findUserByEmail(auth.getName()));
         userService.updateProfilUser(auth.getName(), localUser);
