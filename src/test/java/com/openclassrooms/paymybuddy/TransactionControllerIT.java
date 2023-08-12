@@ -1,6 +1,7 @@
 package com.openclassrooms.paymybuddy;
 
 import com.openclassrooms.paymybuddy.model.BankAccount;
+import com.openclassrooms.paymybuddy.model.Transaction;
 import com.openclassrooms.paymybuddy.repository.BankAccountRepository;
 import com.openclassrooms.paymybuddy.repository.TransactionRepository;
 import com.openclassrooms.paymybuddy.repository.UserRepository;
@@ -21,6 +22,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -30,60 +32,51 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(MockitoExtension.class)
 @ActiveProfiles("test")
 @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "dataTest.sql")
-public class BankAccountControllerIT {
+public class TransactionControllerIT {
+
     @Autowired
     private MockMvc mockMvc;
     @Autowired
     UserRepository userRepository;
     @Autowired
     BankAccountRepository bankAccountRepository;
+    @Autowired
+    TransactionRepository transactionRepository;
     @Test
-    public void postAddBankAccountTest() throws Exception {
+    public void getTransactionsTest() throws Exception {
 
-        mockMvc.perform(post("/bankAccount")
-                        .with(user("TestUseremail@gmail.com").password("TestUserpassword"))
-                        .contentType( MediaType.parseMediaType("application/x-www-form-urlencoded"))
-                        .param("iban", "NewIBANBankAccountUserTest")
-                        .param("description", "Add Secondary Bank Account For User Test")
-                );
+        List<Transaction> lstTransactionUser = transactionRepository.findAllByUserSender_id(userRepository.findUserByEmail("TestUseremail@gmail.com").getId());
 
-        List<BankAccount> lstBankAccountInBdD = new ArrayList<>();
-        lstBankAccountInBdD = bankAccountRepository.findAllByUser_id(userRepository.findUserByEmail("TestUseremail@gmail.com").getId());
-        assertThat(lstBankAccountInBdD.size()).isEqualTo(2);
-        assertThat(lstBankAccountInBdD.get(1).getIban()).isEqualTo("NewIBANBankAccountUserTest");
+        mockMvc.perform(get("/transfer")
+                        .with(user("TestUseremail@gmail.com").password("TestUserpassword")))
+                .andExpectAll(
+                        view().name("transfer"),
+                        status().isOk(),
+                        model().attribute("amountMax", 1990.00),
+                        model().attribute("transactions", lstTransactionUser)
+                )
+                .andReturn();
     }
 
     @Test
-    public void postTransfertToMyBankAccountTest() throws Exception {
+    public void postTransactionsTest() throws Exception {
 
-        mockMvc.perform(post("/bankAccount/transferToMyBankAccount")
-                .with(user("TestUseremail@gmail.com").password("TestUserpassword"))
-                .contentType( MediaType.parseMediaType("application/x-www-form-urlencoded"))
-                .queryParam("id", "16")
-                .queryParam("amount", "1000.00"))
+        //List<Transaction> lstTransactionUser = transactionRepository.findAllByUserSender_id(userRepository.findUserByEmail("TestUseremail@gmail.com").getId());
+
+        mockMvc.perform(post("/transfer/saveTransaction")
+                        .with(user("TestUseremail@gmail.com").password("TestUserpassword"))
+                        .param("connection", "TestFriendUseremail@gmail.com")
+                        .param("amount", "1000.00")
+                        .param("description", "New Test Transaction for UserTest"))
                 .andExpectAll(
-                        view().name("redirect:/profil")
+                        view().name("redirect:/transfer")
                 )
                 .andReturn();
 
         double newUserSolde = userRepository.findUserByEmail("TestUseremail@gmail.com").getSolde();
         assertThat(newUserSolde).isEqualTo(995.00);
-    }
 
-    @Test
-    public void postTransfertFromMyBankAccountTest() throws Exception {
-
-        mockMvc.perform(post("/bankAccount/transferFromMyBankAccount")
-                        .with(user("TestUseremail@gmail.com").password("TestUserpassword"))
-                        .contentType( MediaType.parseMediaType("application/x-www-form-urlencoded"))
-                        .queryParam("id", "16")
-                        .queryParam("amount", "5000.00"))
-                .andExpectAll(
-                        view().name("redirect:/profil")
-                )
-                .andReturn();
-
-        double newUserSolde = userRepository.findUserByEmail("TestUseremail@gmail.com").getSolde();
-        assertThat(newUserSolde).isEqualTo(7000.00);
+        double newFriendUserSolde = userRepository.findUserByEmail("TestFriendUseremail@gmail.com").getSolde();
+        assertThat(newFriendUserSolde).isEqualTo(2000.00);
     }
 }

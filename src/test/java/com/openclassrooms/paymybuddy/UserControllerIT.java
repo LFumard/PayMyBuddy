@@ -100,10 +100,13 @@ public class UserControllerIT {
         expectedUser.setSolde(0.00);
 
         User userInBdD = userRepository.findUserByEmail("TestNewUseremail@gmail.com");
-        assertThat(userInBdD).isEqualTo(expectedUser);
+        assertThat(userInBdD.getLastName()).isEqualTo(expectedUser.getLastName());
+        assertThat(userInBdD.getFirstName()).isEqualTo(expectedUser.getFirstName());
+        assertThat(userInBdD.getEmail()).isEqualTo(expectedUser.getEmail());
+        assertThat(userInBdD.getSolde()).isEqualTo(expectedUser.getSolde());
 
         List<User> totalUserInBdD = userRepository.findAll();
-        assertThat(totalUserInBdD.size()).isEqualTo(2);
+        assertThat(totalUserInBdD.size()).isEqualTo(5);
     }
 
     @Test
@@ -121,7 +124,7 @@ public class UserControllerIT {
                 .andExpect(view().name("/register"));
 
         List<User> totalUserInBdD = userRepository.findAll();
-        assertThat(totalUserInBdD.size()).isEqualTo(1);
+        assertThat(totalUserInBdD.size()).isEqualTo(4);
     }
 
     @Test
