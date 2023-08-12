@@ -44,8 +44,9 @@ public class BankAccountController {
 
         ModelAndView modelAndView = new ModelAndView("redirect:/profil");
         double amountMax = user.getSolde() * (1 - Constante.COMMISSION);
-        modelAndView.addObject("amountMax", amountMax);
+        //modelAndView.addObject("amountMax", amountMax);
         bankAccountService.transferToOrFromMyBankAccount(user, strIBANAccount, amount * -1.0);
+        modelAndView.addObject("amountMax", amountMax);
         return modelAndView;
     }
 

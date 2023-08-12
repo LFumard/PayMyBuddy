@@ -1,7 +1,11 @@
 package com.openclassrooms.paymybuddy;
 
 import com.openclassrooms.paymybuddy.Dto.UserDto;
+import com.openclassrooms.paymybuddy.model.BankAccount;
+import com.openclassrooms.paymybuddy.model.Transaction;
 import com.openclassrooms.paymybuddy.model.User;
+import com.openclassrooms.paymybuddy.repository.BankAccountRepository;
+import com.openclassrooms.paymybuddy.repository.TransactionRepository;
 import com.openclassrooms.paymybuddy.repository.UserRepository;
 import org.hamcrest.core.IsNull;
 import org.junit.Assert;
@@ -20,9 +24,12 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasProperty;
+import static org.hamcrest.Matchers.is;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -43,7 +50,10 @@ public class UserControllerIT {
 
     @Autowired
     UserRepository userRepository;
-
+    @Autowired
+    BankAccountRepository bankAccountRepository;
+    @Autowired
+    TransactionRepository transactionRepository;
     @Test
     public void getRegisterTest() throws Exception {
 
@@ -137,5 +147,68 @@ public class UserControllerIT {
         User userUpdated = userRepository.findUserByEmail("TestUseremail@gmail.com");
         assertThat(userUpdated.getLastName().equals(expectedUser.getLastName()));
         assertThat(userUpdated.getFirstName().equals(expectedUser.getFirstName()));
+    }
+
+    @Test
+    public void getContactTest() throws Exception {
+
+        User expectedFriendUser = userRepository.findUserByEmail("TestFriendUseremail@gmail.com");
+        List<User> lstExpectedFriendUser = new ArrayList<>();
+        lstExpectedFriendUser.add(expectedFriendUser);
+
+        mockMvc.perform(get("/contact")
+                        .with(user("TestUseremail@gmail.com").password("TestUserpassword")))
+                        //.with(csrf()))
+                .andExpectAll(
+                        view().name("contact"),
+                        status().isOk(),
+                        model().attribute("friendsList", lstExpectedFriendUser)
+                )
+                .andReturn();
+    }
+
+    @Test
+    public void postContactTest() throws Exception {
+
+        User friendUser = userRepository.findUserByEmail("TestFriendUseremail@gmail.com");
+        User newfriendUser = userRepository.findUserByEmail("TestANewFriendUseremail@gmail.com");
+        List<User> lstExpectedFriendUser = new ArrayList<>();
+        lstExpectedFriendUser.add(friendUser);
+        lstExpectedFriendUser.add(newfriendUser);
+
+        mockMvc.perform(post("/contact")
+                        .with(user("TestUseremail@gmail.com").password("TestUserpassword"))
+                        .param("email", "TestANewFriendUseremail@gmail.com"))
+                //.with(csrf()))
+                .andExpectAll(
+                        view().name("/contact"),
+                        status().isOk(),
+                        model().attribute("friendsList", lstExpectedFriendUser)
+                )
+                .andReturn();
+        List<User> lstUserInBdD = userRepository.findFriends(userRepository.findByEmail("TestUseremail@gmail.com").get().getId());
+        assertThat(lstUserInBdD.size()).isEqualTo(2);
+    }
+
+    @Test
+    public void getProfilTest() throws Exception {
+
+        List<BankAccount> lstBankAccountUser = new ArrayList<>();
+        lstBankAccountUser = bankAccountRepository.findAllByUser_id(userRepository.findUserByEmail("TestUseremail@gmail.com").getId());
+        List<Transaction> lstTransactionUser = transactionRepository.findAllByUserSender_id(userRepository.findUserByEmail("TestUseremail@gmail.com").getId());
+
+        mockMvc.perform(get("/profil")
+                        .with(user("TestUseremail@gmail.com").password("TestUserpassword")))
+                //        .param("email", "TestANewFriendUseremail@gmail.com"))
+                //.with(csrf()))
+                .andExpectAll(
+                        view().name("profil"),
+                        status().isOk(),
+                        model().attribute("amountMax", 1990.00),
+                        model().attribute("listBankAccount", lstBankAccountUser), // KO A corriger
+                        model().attribute("transactions", lstTransactionUser)
+                        //model().attribute("listBankAccount", hasProperty("iban", is("IBANUserTest")))
+                )
+                .andReturn();
     }
 }

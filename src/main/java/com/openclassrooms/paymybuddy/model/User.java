@@ -175,7 +175,7 @@ public class User implements UserDetails {
 	@Override
 	public String toString() {
 		return "{" +
-//				"id=" + id +
+				"id=" + id +
 				", lastName='" + lastName + '\'' +
 				", firstName='" + firstName + '\'' +
 				", email='" + email + '\'' +
