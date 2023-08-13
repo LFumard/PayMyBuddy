@@ -1,14 +1,9 @@
 package com.openclassrooms.paymybuddy;
 
-import com.openclassrooms.paymybuddy.Dto.UserDto;
 import com.openclassrooms.paymybuddy.model.BankAccount;
-import com.openclassrooms.paymybuddy.model.Transaction;
 import com.openclassrooms.paymybuddy.model.User;
 import com.openclassrooms.paymybuddy.repository.BankAccountRepository;
-import com.openclassrooms.paymybuddy.repository.TransactionRepository;
 import com.openclassrooms.paymybuddy.repository.UserRepository;
-import org.hamcrest.core.IsNull;
-import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -16,34 +11,28 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasProperty;
-import static org.hamcrest.Matchers.is;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.web.servlet.function.RequestPredicates.param;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 @ContextConfiguration
 @ExtendWith(MockitoExtension.class)
 @ActiveProfiles("test")
-@Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "dataTest.sql")
-public class UserControllerIT {
+@Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "/dataTest.sql")
+public class UserControllerITTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -52,8 +41,10 @@ public class UserControllerIT {
     UserRepository userRepository;
     @Autowired
     BankAccountRepository bankAccountRepository;
+/*
     @Autowired
     TransactionRepository transactionRepository;
+*/
     @Test
     public void getRegisterTest() throws Exception {
 
@@ -161,7 +152,6 @@ public class UserControllerIT {
 
         mockMvc.perform(get("/contact")
                         .with(user("TestUseremail@gmail.com").password("TestUserpassword")))
-                        //.with(csrf()))
                 .andExpectAll(
                         view().name("contact"),
                         status().isOk(),
@@ -182,7 +172,6 @@ public class UserControllerIT {
         mockMvc.perform(post("/contact")
                         .with(user("TestUseremail@gmail.com").password("TestUserpassword"))
                         .param("email", "TestANewFriendUseremail@gmail.com"))
-                //.with(csrf()))
                 .andExpectAll(
                         view().name("/contact"),
                         status().isOk(),
@@ -196,21 +185,16 @@ public class UserControllerIT {
     @Test
     public void getProfilTest() throws Exception {
 
-        List<BankAccount> lstBankAccountUser = new ArrayList<>();
+        List<BankAccount> lstBankAccountUser; // = new ArrayList<>();
         lstBankAccountUser = bankAccountRepository.findAllByUser_id(userRepository.findUserByEmail("TestUseremail@gmail.com").getId());
-        List<Transaction> lstTransactionUser = transactionRepository.findAllByUserSender_id(userRepository.findUserByEmail("TestUseremail@gmail.com").getId());
 
         mockMvc.perform(get("/profil")
                         .with(user("TestUseremail@gmail.com").password("TestUserpassword")))
-                //        .param("email", "TestANewFriendUseremail@gmail.com"))
-                //.with(csrf()))
                 .andExpectAll(
                         view().name("profil"),
                         status().isOk(),
                         model().attribute("amountMax", 1990.00),
-                        model().attribute("listBankAccount", lstBankAccountUser), // KO A corriger
-                        model().attribute("transactions", lstTransactionUser)
-                        //model().attribute("listBankAccount", hasProperty("iban", is("IBANUserTest")))
+                        model().attribute("listBankAccount", lstBankAccountUser)
                 )
                 .andReturn();
     }

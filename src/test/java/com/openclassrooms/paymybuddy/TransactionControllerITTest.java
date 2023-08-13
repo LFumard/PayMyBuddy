@@ -1,8 +1,6 @@
 package com.openclassrooms.paymybuddy;
 
-import com.openclassrooms.paymybuddy.model.BankAccount;
 import com.openclassrooms.paymybuddy.model.Transaction;
-import com.openclassrooms.paymybuddy.repository.BankAccountRepository;
 import com.openclassrooms.paymybuddy.repository.TransactionRepository;
 import com.openclassrooms.paymybuddy.repository.UserRepository;
 import org.junit.jupiter.api.Test;
@@ -11,14 +9,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
@@ -31,21 +28,23 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ContextConfiguration
 @ExtendWith(MockitoExtension.class)
 @ActiveProfiles("test")
-@Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "dataTest.sql")
-public class TransactionControllerIT {
+@Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "/dataTest.sql")
+public class TransactionControllerITTest {
 
     @Autowired
     private MockMvc mockMvc;
     @Autowired
     UserRepository userRepository;
+/*
     @Autowired
     BankAccountRepository bankAccountRepository;
+*/
     @Autowired
     TransactionRepository transactionRepository;
     @Test
     public void getTransactionsTest() throws Exception {
 
-        List<Transaction> lstTransactionUser = transactionRepository.findAllByUserSender_id(userRepository.findUserByEmail("TestUseremail@gmail.com").getId());
+        Page<Transaction> lstTransactionUser = transactionRepository.findAllByUserSender_id(userRepository.findUserByEmail("TestUseremail@gmail.com").getId(), PageRequest.of(0, 5, Sort.by("Id").descending()));
 
         mockMvc.perform(get("/transfer")
                         .with(user("TestUseremail@gmail.com").password("TestUserpassword")))

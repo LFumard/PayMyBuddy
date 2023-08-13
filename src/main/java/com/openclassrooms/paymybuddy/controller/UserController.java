@@ -119,8 +119,6 @@ public class UserController {
         List<BankAccount> bankAccounts = bankAccountService.findAllByUserId(user.get().getId());
 
         modelAndView.addObject("user", user.get());
-        modelAndView.addObject("accountBalance", user.get().getSolde());
-
         double amountMax = (double) Math.round(user.get().getSolde() * (1 - Constante.COMMISSION) * 100) / 100;
 
         modelAndView.addObject("amountMax", amountMax);
