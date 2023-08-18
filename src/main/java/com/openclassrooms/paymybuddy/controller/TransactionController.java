@@ -13,8 +13,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-
-import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 @Controller
@@ -33,7 +31,6 @@ public class TransactionController {
     }
 
     @GetMapping
-    //public ModelAndView getTransactions(final @NotNull HttpServletRequest request, @NotNull Authentication auth,
     public ModelAndView getTransactions(@NotNull Authentication auth,
                                         @RequestParam(name = "page", defaultValue = "1") int page,
                                         @RequestParam(name = "size", defaultValue = "5") int size) {

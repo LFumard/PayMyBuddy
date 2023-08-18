@@ -11,11 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
-
 import java.util.List;
 import java.util.Optional;
-
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
 
@@ -50,7 +49,6 @@ class UserServiceTest {
         actualUser.setPassword("passwordActualUser");
         actualUser.setEmail("emailActualUser@gmail.com");
         actualUser.setSolde(100);
-        //actualUser.setFriends(List.of(myFriend));
         List<User> listFriend = actualUser.getFriends();
         listFriend.add(myFriend);
         this.actualUser = actualUser;
@@ -82,7 +80,6 @@ class UserServiceTest {
     @Test
     public void addContactTestWhenEMailFriendDoesNotExist() {
 
-        //Optional<User> friendUserToAdd = Optional.of(new User());
         User friendUserToAdd = new User();
         friendUserToAdd.setId(10);
         friendUserToAdd.setFirstName("firstNamefriendUserToAdd");
@@ -119,7 +116,6 @@ class UserServiceTest {
         when(userRepository.findByEmail(actualUser.getEmail())).thenReturn(Optional.ofNullable(actualUser));
         when(userRepository.save(actualUser)).thenReturn(actualUser);
 
-        //String result = userService.addContact(friendUserToAdd.getEmail(), actualUser.getId());
         String result = userService.addContact(myFriend.getEmail(), actualUser.getId());
 
         assertThat(result).isEqualTo("This contact is already in you're friend's list");
@@ -142,6 +138,16 @@ class UserServiceTest {
     }
 
     @Test
+    public void updateProfilUser_WhenUserDoesntExist() {
+
+        actualUser.setFirstName("NEWfirstNameActualUser");
+        actualUser.setLastName("NEWlastNameActualUser");
+        actualUser.setSolde(1000.00);
+
+        assertThatExceptionOfType(RuntimeException.class).isThrownBy(() -> userService.updateProfilUser("EMailNotExist@gmail.com", actualUser));
+        verify(userRepository, times(0)).save(actualUser);
+    }
+    @Test
     public void updateUser() {
 
         actualUser.setFirstName("NEWfirstNameActualUser");
@@ -154,5 +160,16 @@ class UserServiceTest {
         userService.updateUser(actualUser.getEmail(), actualUser);
 
         verify(userRepository, times(1)).save(actualUser);
+    }
+
+    @Test
+    public void updateUser_WhenUserDoesntExist() {
+
+        actualUser.setFirstName("NEWfirstNameActualUser");
+        actualUser.setLastName("NEWlastNameActualUser");
+        actualUser.setSolde(1000.00);
+
+        assertThatExceptionOfType(RuntimeException.class).isThrownBy(() -> userService.updateUser("EMailNotExist@gmail.com", actualUser));
+        verify(userRepository, times(0)).save(actualUser);
     }
 }

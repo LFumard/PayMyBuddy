@@ -12,11 +12,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -27,7 +25,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @ContextConfiguration
 @ExtendWith(MockitoExtension.class)
-@ActiveProfiles("test")
 @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "/dataTest.sql")
 public class TransactionControllerITTest {
 
@@ -35,10 +32,6 @@ public class TransactionControllerITTest {
     private MockMvc mockMvc;
     @Autowired
     UserRepository userRepository;
-/*
-    @Autowired
-    BankAccountRepository bankAccountRepository;
-*/
     @Autowired
     TransactionRepository transactionRepository;
     @Test
@@ -59,8 +52,6 @@ public class TransactionControllerITTest {
 
     @Test
     public void postTransactionsTest() throws Exception {
-
-        //List<Transaction> lstTransactionUser = transactionRepository.findAllByUserSender_id(userRepository.findUserByEmail("TestUseremail@gmail.com").getId());
 
         mockMvc.perform(post("/transfer/saveTransaction")
                         .with(user("TestUseremail@gmail.com").password("TestUserpassword"))

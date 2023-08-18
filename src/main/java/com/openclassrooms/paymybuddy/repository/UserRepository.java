@@ -17,6 +17,5 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     List<User> findFriends(final int id);
     @Query(value = "SELECT U.friends FROM User U WHERE U.id = :id",
             countQuery  = "SELECT count(U.friends) FROM User U WHERE U.id = :id")
-        //    nativeQuery = true)
     Page<User> findFriendsPage(int id, Pageable pageableParam);
 }

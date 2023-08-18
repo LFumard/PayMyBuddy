@@ -64,9 +64,8 @@ public class Transaction {
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
-		return this.toString() == o.toString();
-	/*	if (!(o instanceof Transaction that)) return false;
-		return id == that.id && Objects.equals(userSender, that.userSender) && Objects.equals(userReceiver, that.userReceiver) && Objects.equals(created_dt, that.created_dt) && Objects.equals(description, that.description) && Objects.equals(amount, that.amount);*/
+		if (!(o instanceof Transaction that)) return false;
+		return id == that.id && Objects.equals(userSender, that.userSender) && Objects.equals(userReceiver, that.userReceiver) && Objects.equals(created_dt, that.created_dt) && Objects.equals(description, that.description) && Objects.equals(amount, that.amount);
 	}
 
 	@Override
@@ -79,10 +78,5 @@ public class Transaction {
 				", description='" + description + '\'' +
 				", amount=" + amount +
 				'}';
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(id, userSender, userReceiver, created_dt, description, amount);
 	}
 }

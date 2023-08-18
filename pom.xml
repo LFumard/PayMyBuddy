@@ -75,8 +75,6 @@
 			<artifactId>bootstrap</artifactId>
 			<version>5.2.3</version>
 		</dependency>
-
-
 		<dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
@@ -173,13 +171,4 @@
 			</plugin>
 		</plugins>
 	</build>
-<!--	<reporting>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jxr-plugin</artifactId>
-				<version>4.0.0+</version>
-			</plugin>
-		</plugins>
-	</reporting>-->
 </project>

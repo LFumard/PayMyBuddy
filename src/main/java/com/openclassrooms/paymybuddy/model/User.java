@@ -58,18 +58,6 @@ public class User implements UserDetails {
 	@OneToMany(mappedBy = "userReceiver")
 	private List<Transaction> transactionsReceiver;
 
-/*	public User(int id, String lastName, String firstName, String email, String password, double solde, List<User> friends, List<Transaction> transactionsEmit, List<Transaction> transactionsReceiver) {
-		this.id = id;
-		this.lastName = lastName;
-		this.firstName = firstName;
-		this.email = email;
-		this.password = password;
-		this.solde = solde;
-		this.friends = friends;
-		this.transactionsEmit = transactionsEmit;
-		this.transactionsReceiver = transactionsReceiver;
-	}*/
-
 	public int getId() {
 		return id;
 	}

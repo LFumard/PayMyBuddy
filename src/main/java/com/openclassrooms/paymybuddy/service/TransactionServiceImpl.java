@@ -9,7 +9,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -66,7 +65,6 @@ public class TransactionServiceImpl implements TransactionService{
         User emitter;
         Optional<User>  optionalReceiver = Optional.ofNullable(userService.findUserByEmail(connection));
         Optional<User> optionalEmitter = userService.findById(idEmitter);
-        double commission;
 
         if (optionalReceiver.isPresent() && optionalEmitter.isPresent()) {
             receiver = optionalReceiver.get();

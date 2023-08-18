@@ -38,7 +38,6 @@ public class HomeController {
         double amountMax = user.get().getSolde() * (1 - Constante.COMMISSION);
 
         modelAndView.addObject("amountMax", amountMax);
-        //modelAndView.addObject("accountBalance", user.get().getSolde());
         modelAndView.addObject("transactions", transactionService.findAllByEmitterAndReceiverId(user.get().getId(), PageRequest.of(page - 1, size)));
         modelAndView.addObject("user", user.map(UserDto::fromEntityUser).orElse(null));
         modelAndView.addObject("breadcrumb", "");

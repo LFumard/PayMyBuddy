@@ -11,14 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
@@ -30,7 +27,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @ContextConfiguration
 @ExtendWith(MockitoExtension.class)
-@ActiveProfiles("test")
 @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "/dataTest.sql")
 public class UserControllerITTest {
 
@@ -41,10 +37,6 @@ public class UserControllerITTest {
     UserRepository userRepository;
     @Autowired
     BankAccountRepository bankAccountRepository;
-/*
-    @Autowired
-    TransactionRepository transactionRepository;
-*/
     @Test
     public void getRegisterTest() throws Exception {
 
@@ -139,8 +131,8 @@ public class UserControllerITTest {
                 )
                 .andReturn();
         User userUpdated = userRepository.findUserByEmail("TestUseremail@gmail.com");
-        assertThat(userUpdated.getLastName().equals(expectedUser.getLastName()));
-        assertThat(userUpdated.getFirstName().equals(expectedUser.getFirstName()));
+        assertThat(userUpdated.getLastName()).isEqualTo(expectedUser.getLastName());
+        assertThat(userUpdated.getFirstName()).isEqualTo(expectedUser.getFirstName());
     }
 
     @Test
