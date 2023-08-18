@@ -16,6 +16,8 @@ Transfert d'argent entre amis
 - Executer le script SQL pour création de la base de données et schéma associé à partir du fichier scriptBdD/Schema.sql
 
 ## MPD et Diagramme UML
+- MPD
 ![MPD](https://github.com/LFumard/PayMyBuddy/blob/main/src/main/resources/static/images/MPD.png)
 
+- Diagramme UML
 ![Diagram UML](https://github.com/LFumard/PayMyBuddy/blob/main/src/main/resources/static/images/Class.png)
