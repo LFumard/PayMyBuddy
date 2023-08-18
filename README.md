@@ -10,7 +10,6 @@ Transfert d'argent entre amis
 ## Paramètres et pré requis
 
 - Le port local localhost http par défaut est 8080 et peut être adapté depuis la section *server.port* du fichier de configuration application.properties
-
                          `server.port=8080`
 - Mot de passe de connexion au serveur MySQL à préciser dans la section *spring.datasource.password*  du fichier de configuration application.properties
 
@@ -20,6 +19,3 @@ Transfert d'argent entre amis
 ![MPD](/src/main/resources/static.images/MPD.png)
 
 ![Diagram UML](/src/main/resources/static.images/Class.png)
-
-`http://localhost:8080/communityEmail?city=<city>`  
-Cette url doit retourner les adresses mail de tous les habitants de la ville
